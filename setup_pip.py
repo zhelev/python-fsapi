@@ -22,4 +22,5 @@ setup(name='fsapi',
       zip_safe=False,
       packages=find_packages(),
       include_package_data=True,
+      download_url = 'https://github.com/zhelev/python-fsapi/archive/master.zip',
       url='https://github.com/zhelev/python-fsapi.git')
