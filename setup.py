@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='fsapi',
-      version='0.0.1',
+      version='0.0.2',
       description='Implementation of the Frontier Silicon API for python',
       install_requires=['requests','lxml'],
       maintainer='Krasimir Zhelev',
