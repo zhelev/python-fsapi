@@ -20,7 +20,9 @@ setup(name='fsapi',
       maintainer='Krasimir Zhelev',
       maintainer_email='krasimir.zhelev@gmail.com',
       zip_safe=False,
-      packages=find_packages(),
+      packages=['fsapi'], #find_packages(),
       include_package_data=True,
       download_url = 'https://github.com/zhelev/python-fsapi/archive/master.zip',
-      url='https://github.com/zhelev/python-fsapi.git')
+      url='https://github.com/zhelev/python-fsapi.git',
+      keywords = ['fsapi', 'frontier silicon'],
+)
