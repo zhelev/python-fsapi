@@ -1,4 +1,4 @@
-"""Setup fsapi package."""
+from distutils.core import setup
 
 setup(name='fsapi',
       version='0.0.1',
