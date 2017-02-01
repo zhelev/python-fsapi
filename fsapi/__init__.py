@@ -23,8 +23,8 @@ class FSAPI(object):
         self.sid = self.create_session()
 
     def get_fsapi_endpoint(self):
-        r = requests.get(self.fsapi_device_url)
-        doc = objectify.fromstring(r.content)
+        endpoint = requests.get(self.fsapi_device_url)
+        doc = objectify.fromstring(endpoint.content)
         return doc.webfsapi.text
 
     def create_session(self):
@@ -45,12 +45,12 @@ class FSAPI(object):
 
         params.update(**extra)
 
-        r = requests.get('%s/%s' % (self.webfsapi, path), params=params)
-        if r.status_code == 404:
-           return None 
+        result = requests.get('%s/%s' % (self.webfsapi, path), params=params)
+        if result.status_code == 404:
+            return None
 
-        return objectify.fromstring(r.content)
- 
+        return objectify.fromstring(result.content)
+
     def __del__(self):
         self.call('DELETE_SESSION')
 
@@ -62,21 +62,21 @@ class FSAPI(object):
     def handle_set(self, item, value):
         doc = self.call('SET/{}'.format(item), dict(value=value))
         if doc is None:
-           return None
-        
+            return None
+
         return doc.status == 'FS_OK'
 
     def handle_text(self, item):
         doc = self.handle_get(item)
         if doc is None:
-           return None
+            return None
 
         return doc.value.c8_array.text or None
 
     def handle_int(self, item):
         doc = self.handle_get(item)
         if doc is None:
-           return None
+            return None
 
         return int(doc.value.u8.text) or None
 
@@ -84,7 +84,7 @@ class FSAPI(object):
     def handle_long(self, item):
         doc = self.handle_get(item)
         if doc is None:
-           return None
+            return None
 
         return int(doc.value.u32.text) or None
 
@@ -94,7 +94,7 @@ class FSAPI(object):
         ))
 
         if doc is None:
-           return []
+            return []
 
         if not doc.status == 'FS_OK':
             return []
@@ -110,9 +110,9 @@ class FSAPI(object):
 
     def collect_labels(self, items):
         if items is None:
-           return []
-   	
-        return [ str(item['label']) for item in items if item['label'] ]
+            return []
+
+        return [str(item['label']) for item in items if item['label']]
 
     ### Properties
     @property
@@ -149,7 +149,7 @@ class FSAPI(object):
     #1=Play; 2=Pause; 3=Next (song/station); 4=Previous (song/station)
     def play_control(self, value):
         return self.handle_set('netRemote.play.control', value)
-    
+
     def play(self):
         return self.play_control(1)
 
@@ -185,7 +185,7 @@ class FSAPI(object):
         return bool(self.handle_int('netRemote.sys.audio.mute'))
 
     def set_mute(self, value=False):
-        return self.handle_set('netRemote.sys.audio.mute', int(value))  
+        return self.handle_set('netRemote.sys.audio.mute', int(value))
 
     mute = property(get_mute, set_mute)
 
@@ -208,20 +208,21 @@ class FSAPI(object):
         return self.collect_labels(self.modes)
 
     def get_mode(self):
-        m = None
-        intMode = self.handle_long('netRemote.sys.mode')
-        for mo in self.modes:
-          if mo['band'] == intMode:
-            m = mo['label']
-        return m
+        mode = None
+        int_mode = self.handle_long('netRemote.sys.mode')
+        for temp_mode in self.modes:
+            if temp_mode['band'] == int_mode:
+                mode = temp_mode['label']
+
+        return mode
 
     def set_mode(self, value):
-        m = -1
-        for mo in self.modes:
-          if mo['label'] == value:
-            m = mo['band']
-        
-        self.handle_set('netRemote.sys.mode', m)      
+        mode = -1
+        for temp_mode in self.modes:
+            if temp_mode['label'] == value:
+                mode = temp_mode['band']
+
+        self.handle_set('netRemote.sys.mode', mode)
 
     mode = property(get_mode, set_mode)
 
