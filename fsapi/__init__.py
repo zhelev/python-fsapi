@@ -1,8 +1,10 @@
 """
-Support for interaction with Frontier Silicon Devices (Medion, Hama, Auna,...) devices.
+Support for interaction with Frontier Silicon Devices
+For example internet radios from: Medion, Hama, Auna, ...
 """
 import requests
 from lxml import objectify
+
 
 class FSAPI(object):
 
@@ -54,7 +56,7 @@ class FSAPI(object):
     def __del__(self):
         self.call('DELETE_SESSION')
 
-    ### Handlers
+    # Handlers
 
     def handle_get(self, item):
         return self.call('GET/{}'.format(item))
@@ -114,7 +116,7 @@ class FSAPI(object):
 
         return [str(item['label']) for item in items if item['label']]
 
-    ### Properties
+    # Properties
     @property
     def play_status(self):
         status = self.handle_int('netRemote.play.status')
@@ -144,9 +146,9 @@ class FSAPI(object):
     def volume_steps(self):
         return self.handle_int('netRemote.sys.caps.volumeSteps')
 
-    ### Read-write
+    # Read-write
 
-    #1=Play; 2=Pause; 3=Next (song/station); 4=Previous (song/station)
+    # 1=Play; 2=Pause; 3=Next (song/station); 4=Previous (song/station)
     def play_control(self, value):
         return self.handle_set('netRemote.play.control', value)
 
@@ -214,7 +216,7 @@ class FSAPI(object):
             if temp_mode['band'] == int_mode:
                 mode = temp_mode['label']
 
-        return mode
+        return str(mode)
 
     def set_mode(self, value):
         mode = -1
