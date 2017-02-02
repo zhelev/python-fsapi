@@ -1,3 +1,6 @@
+"""
+Setup file for the fsapi package
+"""
 from distutils.core import setup
 
 setup(name='fsapi',
