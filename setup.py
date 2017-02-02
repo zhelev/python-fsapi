@@ -4,7 +4,7 @@ Setup file for the fsapi package
 from distutils.core import setup
 
 setup(name='fsapi',
-      version='0.0.3',
+      version='0.0.4',
       description='Implementation of the Frontier Silicon API for python',
       # install_requires=['requests','lxml'],
       author='Krasimir Zhelev',
