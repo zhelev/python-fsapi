@@ -1,2 +1,2 @@
-requests==2.13.0
-lxml==3.7.2
+requests>=2
+lxml>=3
