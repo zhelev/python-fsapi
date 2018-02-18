@@ -3,10 +3,14 @@ Support for interaction with Frontier Silicon Devices
 For example internet radios from: Medion, Hama, Auna, ...
 """
 import requests
+import logging
+import traceback
 from lxml import objectify
 
 
 class FSAPI(object):
+
+    DEFAULT_TIMEOUT_IN_SECONDS = 1
 
     PLAY_STATES = {
         0: 'stopped',
@@ -15,17 +19,18 @@ class FSAPI(object):
         3: 'paused',
     }
 
-    def __init__(self, fsapi_device_url, pin):
+    def __init__(self, fsapi_device_url, pin, timeout=DEFAULT_TIMEOUT_IN_SECONDS):
         self.pin = pin
         self.sid = None
         self.webfsapi = None
         self.fsapi_device_url = fsapi_device_url
+        self.timeout = timeout
 
         self.webfsapi = self.get_fsapi_endpoint()
         self.sid = self.create_session()
 
     def get_fsapi_endpoint(self):
-        endpoint = requests.get(self.fsapi_device_url)
+        endpoint = requests.get(self.fsapi_device_url, timeout = self.timeout)
         doc = objectify.fromstring(endpoint.content)
         return doc.webfsapi.text
 
@@ -34,24 +39,30 @@ class FSAPI(object):
         return doc.sessionId.text
 
     def call(self, path, extra=None):
-        if not self.webfsapi:
-            raise Exception('No server found')
+        """Execute a frontier silicon API call."""
+        try:
+            if not self.webfsapi:
+                raise Exception('No server found')
 
-        if type(extra) is not dict:
-            extra = dict()
+            if type(extra) is not dict:
+                extra = dict()
 
-        params = dict(
-            pin=self.pin,
-            sid=self.sid,
-        )
+            params = dict(
+                pin=self.pin,
+                sid=self.sid,
+            )
 
-        params.update(**extra)
+            params.update(**extra)
 
-        result = requests.get('%s/%s' % (self.webfsapi, path), params=params)
-        if result.status_code == 404:
-            return None
+            result = requests.get('%s/%s' % (self.webfsapi, path), params=params, timeout = self.timeout)
+            if result.status_code == 404:
+                return None
 
-        return objectify.fromstring(result.content)
+            return objectify.fromstring(result.content)
+        except Exception as e:
+            logging.error('FSAPI Exception: ' + traceback.format_exc())
+
+        return None
 
     def __del__(self):
         self.call('DELETE_SESSION')
