@@ -28,7 +28,7 @@ PROJECT_CLASSIFIERS = [
 
 
 setup(name='fsapi',
-      version='0.0.8',
+      version='0.0.9',
       description='Implementation of the Frontier Silicon API for Python',
       author='Krasimir Zhelev',
       author_email='krasimir.zhelev@gmail.com',

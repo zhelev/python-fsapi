@@ -169,10 +169,10 @@ class FSAPI(object):
     def pause(self):
         return self.play_control(2)
 
-    def next(self):
+    def forward(self):
         return self.play_control(3)
 
-    def prev(self):
+    def rewind(self):
         return self.play_control(4)
 
     # Volume
