@@ -91,7 +91,7 @@ class FSAPI(object):
         if doc is None:
             return None
 
-        return int(doc.value.u8.text) or None
+        return int(doc.value.u8.text)
 
     # returns an int, assuming the value does not exceed 8 bits
     def handle_long(self, item):
@@ -99,7 +99,7 @@ class FSAPI(object):
         if doc is None:
             return None
 
-        return int(doc.value.u32.text) or None
+        return int(doc.value.u32.text)
 
     def handle_list(self, item):
         doc = self.call('LIST_GET_NEXT/'+item+'/-1', dict(
