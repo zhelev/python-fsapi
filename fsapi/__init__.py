@@ -239,6 +239,14 @@ class FSAPI(object):
 
     mode = property(get_mode, set_mode)
 
+    def get_position(self):
+        return self.handle_long('netRemote.play.position')
+
+    def set_position(self, value):
+        return self.handle_set('netRemote.play.position', int(value))
+
+    position = property(get_position, set_position)
+
     @property
     def duration(self):
         return self.handle_long('netRemote.play.info.duration')
